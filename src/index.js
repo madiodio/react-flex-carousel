@@ -123,45 +123,48 @@ class Carousel extends Component {
       flexShrink: 0
     };
     return (
-      <div
-        {...props}
-        style={Object.assign({}, props.style, {
-          position: "relative",
-          overflowX: "hidden",
-          touchAction: "pan-y pinch-zoom"
-        })}
-      >
-        <ul
-          style={{
-            listStyleType: "none",
-            padding: 0,
-            margin: 0,
-            display: "flex",
-            transitionProperty: sliding ? "transform" : "none",
-            transform: enabled
-              ? offset !== 0
-                ? "translateX(calc(" + offset * 1 + "px - " + slide * 100 + "%))"
-                : "translateX(-" + slide * 100 + "%)"
-              : null,
-            transitionDuration,
-            transitionTimingFunction,
-            contain: "layout",
-            willChange: "transform"
-          }}
-          {...this.events}
+      <React.Fragment>
+        <div
+          {...props}
+          style={Object.assign({}, props.style, {
+            position: "relative",
+            overflowX: "hidden",
+            touchAction: "pan-y pinch-zoom"
+          })}
         >
-          {(enabled &&
-            Children.map(
-              slides.slice(-1).concat(children, slides.slice(0, 1)),
-              (item, index) => (
-                <li aria-current={slide === index} style={slideStyle}>
-                  {item}
-                </li>
-              )
-            )) || <li>{children}</li>}
-        </ul>
+          <ul
+            className="sliderList"
+            style={{
+              listStyleType: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              transitionProperty: sliding ? "transform" : "none",
+              transform: enabled
+                ? offset !== 0
+                  ? "translateX(calc(" + offset * 1 + "px - " + slide * 100 + "%))"
+                  : "translateX(-" + slide * 100 + "%)"
+                : null,
+              transitionDuration,
+              transitionTimingFunction,
+              contain: "layout",
+              willChange: "transform"
+            }}
+            {...this.events}
+          >
+            {(enabled &&
+              Children.map(
+                slides.slice(-1).concat(children, slides.slice(0, 1)),
+                (item, index) => (
+                  <li aria-current={slide === index} style={slideStyle}>
+                    {item}
+                  </li>
+                )
+              )) || <li>{children}</li>}
+          </ul>
+        </div>
         {enabled && indicator && (
-          <ol>
+          <ul className="indicator">
             {Children.map(children, (item, index) => (
               <li
                 aria-current={slide === index + 1}
@@ -170,7 +173,7 @@ class Carousel extends Component {
                 {index + 1}
               </li>
             ))}
-          </ol>
+          </ul>
         )}
         {enabled && switcher && (
           <div className="switcher">
@@ -178,7 +181,7 @@ class Carousel extends Component {
             <button type="button" className="next" onClick={goNextSlide} />
           </div>
         )}
-      </div>
+      </React.Fragment>
     );
   }
 }
@@ -199,7 +202,7 @@ Carousel.propTypes = {
 
 Carousel.defaultProps = {
   className: "slider",
-  transitionDuration: ".8s",
+  transitionDuration: ".6s",
   transitionTimingFunction: "ease-in-out",
   initialSlide: 1 // slide index start from 1
 };

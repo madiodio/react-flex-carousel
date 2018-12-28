@@ -98,18 +98,21 @@ class Carousel extends Component {
       transitionDuration,
       transitionTimingFunction,
       slideWillChange,
-      slideDidChange
+      slideDidChange,
+      PrevComponent,
+      NextComponent,
+      ...props
     } = this.props;
-    const props = Object.assign({}, this.props); // rest parameters is not available before node 8
-    delete props.children;
-    delete props.autoPlayInterval;
-    delete props.switcher;
-    delete props.indicator;
-    delete props.transitionDuration;
-    delete props.transitionTimingFunction;
-    delete props.slideWillChange;
-    delete props.slideDidChange;
-    delete props.initialSlide;
+    // const props = Object.assign({}, this.props); // rest parameters is not available before node 8
+    // delete props.children;
+    // delete props.autoPlayInterval;
+    // delete props.switcher;
+    // delete props.indicator;
+    // delete props.transitionDuration;
+    // delete props.transitionTimingFunction;
+    // delete props.slideWillChange;
+    // delete props.slideDidChange;
+    // delete props.initialSlide;
     const { slide, sliding, dragging, offset } = this.state;
     const slides = Children.map(children, child =>
       React.cloneElement(child, { key: child.key + "_clone" })
@@ -177,8 +180,12 @@ class Carousel extends Component {
         )}
         {enabled && switcher && (
           <div className="switcher">
-            <button type="button" className="prev" onClick={goPrevSlide} />
-            <button type="button" className="next" onClick={goNextSlide} />
+            <button type="button" className="prev" onClick={goPrevSlide}>
+              {PrevComponent}
+            </button>
+            <button type="button" className="next" onClick={goNextSlide}>
+              {NextComponent}
+            </button>
           </div>
         )}
       </React.Fragment>
@@ -197,14 +204,18 @@ Carousel.propTypes = {
   slideDidChange: PropTypes.func,
   initialSlide: PropTypes.number,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired
+    .isRequired,
+  PrevComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  NextComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
 };
 
 Carousel.defaultProps = {
   className: "slider",
   transitionDuration: ".6s",
   transitionTimingFunction: "ease-in-out",
-  initialSlide: 1 // slide index start from 1
+  initialSlide: 1, // slide index start from 1
+  PrevComponent: null,
+  NextComponent: null
 };
 
 export default Carousel;

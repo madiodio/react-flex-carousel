@@ -99,8 +99,10 @@ class Carousel extends Component {
       transitionTimingFunction,
       slideWillChange,
       slideDidChange,
+      slideWidth,
       PrevComponent,
       NextComponent,
+      initialSlide,
       ...props
     } = this.props;
     // const props = Object.assign({}, this.props); // rest parameters is not available before node 8
@@ -121,14 +123,17 @@ class Carousel extends Component {
     const enabled = count > 1;
     const goPrevSlide = this.changeSlide.bind(this, slide - 1);
     const goNextSlide = this.changeSlide.bind(this, slide + 1);
+
     const slideStyle = {
-      flexBasis: "100%",
+      flexBasis: slideWidth || "100%",
       flexShrink: 0
     };
+
+    const slideOffset = slideWidth ? `${slide * slideWidth}px` : `${slide * 100}%`;
+
     return (
       <React.Fragment>
         <div
-          {...props}
           style={Object.assign({}, props.style, {
             position: "relative",
             overflowX: "hidden",
@@ -145,8 +150,8 @@ class Carousel extends Component {
               transitionProperty: sliding ? "transform" : "none",
               transform: enabled
                 ? offset !== 0
-                  ? "translateX(calc(" + offset * 1 + "px - " + slide * 100 + "%))"
-                  : "translateX(-" + slide * 100 + "%)"
+                  ? `translateX(calc(${offset}px - ${slideOffset}))`
+                  : `translateX(-${slideOffset})`
                 : null,
               transitionDuration,
               transitionTimingFunction,
@@ -203,6 +208,7 @@ Carousel.propTypes = {
   slideWillChange: PropTypes.func,
   slideDidChange: PropTypes.func,
   initialSlide: PropTypes.number,
+  slideWidth: PropTypes.number,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
     .isRequired,
   PrevComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
@@ -215,7 +221,8 @@ Carousel.defaultProps = {
   transitionTimingFunction: "ease-in-out",
   initialSlide: 1, // slide index start from 1
   PrevComponent: null,
-  NextComponent: null
+  NextComponent: null,
+  slideWidth: null
 };
 
 export default Carousel;
